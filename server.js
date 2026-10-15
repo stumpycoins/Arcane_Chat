@@ -68,6 +68,7 @@ const server = http.createServer(async (request, response) => {
     const room = rooms.get(code);
     const body = await readJson(request);
     const userName = cleanText(body.userName, 24);
+    const resume = body.resume === true;
 
     if (!room) {
       sendJson(response, 404, { message: "No room found with that secret code." });
@@ -79,8 +80,13 @@ const server = http.createServer(async (request, response) => {
       return;
     }
 
-    const joinedAt = new Date().toISOString();
     room.members ||= [room.owner];
+    if (resume) {
+      sendJson(response, 200, { room });
+      return;
+    }
+
+    const joinedAt = new Date().toISOString();
     room.messages.push(createMessage("system", `${userName} joined ${room.name}.`));
     broadcastRoom(room);
     sendJson(response, 200, { room: { ...room, messages: [] }, joinedAt });
@@ -203,7 +209,7 @@ const server = http.createServer(async (request, response) => {
 });
 
 server.listen(port, "0.0.0.0", () => {
-  console.log(`SecretChat running at http://localhost:${port}`);
+  console.log(`Arcane Chat running at http://localhost:${port}/secretchat`);
 });
 
 function broadcastRoom(room) {

@@ -54,7 +54,9 @@ const typingClientId = crypto.randomUUID();
 let typingIdleTimer = null;
 let isTyping = false;
 
-if (state.name) {
+if (state.name && state.roomCode) {
+  restoreSavedRoom();
+} else if (state.name) {
   showRoomGate();
 }
 
@@ -182,6 +184,8 @@ document.querySelectorAll(".leave-room").forEach((button) => {
     if (events) events.close();
     events = null;
     currentRoom = null;
+    state.roomCode = "";
+    saveState();
     visibleAfter = null;
     clearReply();
     clearImageSelection();
@@ -224,10 +228,10 @@ mobileCopyCode.addEventListener("click", async () => {
 shareRoomCode.addEventListener("click", async () => {
   if (!currentRoom) return;
 
-  const shareText = `Join my SecretChat room with code: ${currentRoom.code}`;
+  const shareText = `Join my Arcane Chat room with code: ${currentRoom.code}`;
   if (navigator.share) {
     try {
-      await navigator.share({ title: "Join my SecretChat room", text: shareText });
+      await navigator.share({ title: "Join my Arcane Chat room", text: shareText });
     } catch (error) {
       if (error.name !== "AbortError") roomMeta.textContent = "Could not share the room code.";
     }
@@ -291,6 +295,25 @@ function showRoomGate() {
   roomName.focus();
 }
 
+async function restoreSavedRoom() {
+  const result = await requestJson(apiUrl(`/api/rooms/${encodeURIComponent(state.roomCode)}/join`), {
+    method: "POST",
+    body: { userName: state.name, resume: true }
+  });
+
+  if (result.ok) {
+    enterChat(result.room);
+    return;
+  }
+
+  state.roomCode = "";
+  saveState();
+  showRoomGate();
+  showRoomMode("join");
+  joinError.textContent = "That room is no longer available. Join again with its code.";
+  joinError.classList.remove("hidden");
+}
+
 function showRoomMode(mode) {
   const isCreate = mode === "create";
   createTab.classList.toggle("active", isCreate);
@@ -309,6 +332,8 @@ function showRoomMode(mode) {
 function enterChat(room, joinedAt = null) {
   isTyping = false;
   currentRoom = room;
+  state.roomCode = room.code;
+  saveState();
   visibleAfter = joinedAt ? Date.parse(joinedAt) : null;
   welcomePanel.classList.add("hidden");
   chatApp.classList.remove("hidden");
@@ -357,7 +382,7 @@ function connectToRoomEvents(code) {
       ? `${users[0].name} is typing`
       : users.length > 1
         ? `${users.map((user) => user.name).join(", ")} are typing`
-        : "SecretChat is typing";
+        : "Arcane Chat is typing";
     typingIndicator.classList.toggle("hidden", users.length === 0);
   });
 
@@ -624,7 +649,7 @@ async function requestJson(url, options = {}) {
   } catch {
     return {
       ok: false,
-      message: "Start the SecretChat server, then try again."
+      message: "Start the Arcane Chat server, then try again."
     };
   }
 }

@@ -3,15 +3,18 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SecretChat</title>
-    <link rel="icon" type="image/png" href="img/SecretChat_Icon.png">
+    <title>Arcane Chat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="Img/SecretChat_Icon.png">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <main class="app-shell">
       <section class="welcome-panel" id="welcomePanel" aria-labelledby="welcomeTitle">
-        <img class="brand-mark" src="img/SecretChat_Icon.png" alt="" aria-hidden="true">
-        <h1 id="welcomeTitle">SecretChat</h1>
+        <img class="brand-mark" src="Img/SecretChat_Icon.png" alt="" aria-hidden="true">
+        <h1 id="welcomeTitle">Arcane Chat</h1>
         <p>Enter your name, then create a private room or join one with a secret code.</p>
         <form class="name-form" id="nameForm">
           <label for="displayName">Your name</label>
@@ -42,12 +45,21 @@
         </section>
       </section>
 
-      <section class="chat-app hidden" id="chatApp" aria-label="SecretChat room">
+      <div class="welcome-decorations" aria-hidden="true">
+        <span>🤫</span><span>secret</span><span>hide</span><span>🗝️</span>
+        <span>🔏</span><span>🤐</span><span>🤭</span><span>💞</span>
+        <span>⚠️</span><span>🎁</span><span>😎</span><span>🔞</span><span>🤤</span>
+        <span>🤫</span><span>secret</span><span>hide</span><span>🗝️</span>
+        <span>🔏</span><span>🤐</span><span>🤭</span><span>💞</span>
+        <span>⚠️</span><span>🎁</span><span>😎</span><span>🔞</span><span>🤤</span>
+      </div>
+
+      <section class="chat-app hidden" id="chatApp" aria-label="Arcane Chat room">
         <aside class="sidebar">
           <div class="room-header">
-            <img class="brand-mark small" src="img/SecretChat_Icon.png" alt="" aria-hidden="true">
+            <img class="brand-mark small" src="Img/SecretChat_Icon.png" alt="" aria-hidden="true">
             <div>
-              <h2>SecretChat</h2>
+              <h2>Arcane Chat</h2>
               <span id="onlineStatus">Private room</span>
             </div>
           </div>
@@ -102,7 +114,7 @@
           <div class="messages" id="messages" role="log" aria-live="polite"></div>
 
           <div class="typing hidden" id="typingIndicator">
-            SecretChat is typing
+            Arcane Chat is typing
             <span></span><span></span><span></span>
           </div>
 

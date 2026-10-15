@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Society";
+  src: url("font/Society-Regular.otf") format("opentype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   --ink: #111827;
   --muted: #6b7280;
@@ -18,7 +26,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "DM Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
   background:
     linear-gradient(135deg, rgba(8, 127, 140, 0.18), rgba(244, 247, 251, 0) 45%),
@@ -40,13 +48,71 @@ button {
 }
 
 .app-shell {
+  position: relative;
+  isolation: isolate;
   min-height: 100vh;
   display: grid;
   place-items: center;
   padding: 28px;
 }
 
+.welcome-decorations {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: none;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.welcome-panel:not(.hidden) ~ .welcome-decorations {
+  display: block;
+}
+
+.welcome-decorations span {
+  position: absolute;
+  display: block;
+  color: rgba(8, 91, 99, 0.32);
+  font-size: clamp(1.1rem, 2.6vw, 2rem);
+  font-weight: 700;
+  animation: welcome-drift 7s ease-in-out infinite alternate;
+}
+
+.welcome-decorations span:nth-child(1) { top: 12%; left: 12%; }
+.welcome-decorations span:nth-child(2) { top: 18%; right: 14%; animation-delay: -2s; }
+.welcome-decorations span:nth-child(3) { top: 34%; left: 6%; animation-delay: -4s; }
+.welcome-decorations span:nth-child(4) { top: 30%; right: 8%; animation-delay: -1s; }
+.welcome-decorations span:nth-child(5) { top: 50%; left: 14%; animation-delay: -3s; }
+.welcome-decorations span:nth-child(6) { top: 56%; right: 12%; animation-delay: -5s; }
+.welcome-decorations span:nth-child(7) { top: 70%; left: 7%; animation-delay: -2.5s; }
+.welcome-decorations span:nth-child(8) { top: 76%; right: 8%; animation-delay: -3.5s; }
+.welcome-decorations span:nth-child(9) { top: 88%; left: 27%; animation-delay: -1.5s; }
+.welcome-decorations span:nth-child(10) { top: 10%; left: 44%; animation-delay: -4.5s; }
+.welcome-decorations span:nth-child(11) { top: 88%; right: 29%; animation-delay: -2.2s; }
+.welcome-decorations span:nth-child(12) { top: 42%; left: 24%; animation-delay: -5.2s; }
+.welcome-decorations span:nth-child(13) { top: 62%; right: 24%; animation-delay: -3.2s; }
+.welcome-decorations span:nth-child(14) { top: 24%; left: 30%; animation-delay: -1.8s; }
+.welcome-decorations span:nth-child(15) { top: 14%; right: 32%; animation-delay: -4.8s; }
+.welcome-decorations span:nth-child(16) { top: 28%; left: 78%; animation-delay: -2.8s; }
+.welcome-decorations span:nth-child(17) { top: 46%; right: 5%; animation-delay: -5.8s; }
+.welcome-decorations span:nth-child(18) { top: 54%; left: 5%; animation-delay: -3.8s; }
+.welcome-decorations span:nth-child(19) { top: 66%; right: 38%; animation-delay: -1.2s; }
+.welcome-decorations span:nth-child(20) { top: 73%; left: 35%; animation-delay: -4.2s; }
+.welcome-decorations span:nth-child(21) { top: 80%; right: 12%; animation-delay: -2.4s; }
+.welcome-decorations span:nth-child(22) { top: 92%; left: 12%; animation-delay: -5.4s; }
+.welcome-decorations span:nth-child(23) { top: 5%; right: 42%; animation-delay: -3.4s; }
+.welcome-decorations span:nth-child(24) { top: 36%; left: 12%; animation-delay: -1.4s; }
+.welcome-decorations span:nth-child(25) { top: 48%; right: 18%; animation-delay: -4.4s; }
+.welcome-decorations span:nth-child(26) { top: 94%; right: 15%; animation-delay: -2.6s; }
+
+@keyframes welcome-drift {
+  from { transform: translate3d(0, -8px, 0) rotate(-5deg); }
+  to { transform: translate3d(0, 10px, 0) rotate(5deg); }
+}
+
 .welcome-panel {
+  position: relative;
+  z-index: 1;
   width: min(440px, 100%);
   padding: 34px;
   border: 1px solid rgba(216, 222, 232, 0.9);
@@ -64,6 +130,13 @@ button {
   box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
 }
 
+.welcome-panel > .brand-mark {
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin-inline: auto;
+}
+
 .brand-mark.small {
   width: 42px;
   height: 42px;
@@ -79,6 +152,9 @@ button {
 
 .welcome-panel h1 {
   margin-top: 20px;
+  text-align: center;
+  font-family: "Society", "DM Sans", sans-serif;
+  font-weight: 400;
   font-size: clamp(2rem, 8vw, 3rem);
   line-height: 1;
 }
@@ -106,7 +182,7 @@ button {
   padding: 4px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #eef3f8 url("Img/ChatBG.png") center / cover no-repeat;
+  background: #eef3f8;
 }
 
 .tab {
@@ -716,13 +792,19 @@ button:hover {
 }
 
 @media (max-width: 760px) {
+  html,
   body {
+    height: 100%;
     background: #eef3f8;
   }
 
   .app-shell {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
     padding: 0;
     place-items: stretch;
+    overflow: hidden;
   }
 
   .welcome-panel {
@@ -806,8 +888,7 @@ button:hover {
 
   .chat-app {
     width: 100%;
-    height: 100vh;
-    height: 100dvh;
+    height: 100%;
     min-height: 0;
     grid-template-columns: 1fr;
     border: 0;
@@ -821,12 +902,14 @@ button:hover {
   .conversation {
     grid-template-rows: auto 1fr auto auto;
     min-height: 0;
+    background-color: #eef3f8;
   }
 
   .messages {
     gap: 10px;
     min-height: 0;
     padding: 14px 10px 18px;
+    background-color: #eef3f8;
   }
 
   .message {
@@ -885,6 +968,42 @@ button:hover {
 }
 
 @media (max-width: 420px) {
+  .welcome-panel:not(.hidden) {
+    background: rgba(255, 255, 255, 0.72);
+  }
+
+  .welcome-decorations span {
+    color: rgba(8, 91, 99, 0.62);
+    font-size: 1.25rem;
+  }
+
+  .welcome-decorations span:nth-child(1) { top: 3%; left: 3%; }
+  .welcome-decorations span:nth-child(2) { top: 7%; right: 5%; }
+  .welcome-decorations span:nth-child(3) { top: 22%; left: 2%; }
+  .welcome-decorations span:nth-child(4) { top: 20%; right: 2%; }
+  .welcome-decorations span:nth-child(5) { top: 38%; left: 3%; }
+  .welcome-decorations span:nth-child(6) { top: 42%; right: 3%; }
+  .welcome-decorations span:nth-child(7) { top: 60%; left: 2%; }
+  .welcome-decorations span:nth-child(8) { top: 64%; right: 2%; }
+  .welcome-decorations span:nth-child(9) { top: 82%; left: 4%; }
+  .welcome-decorations span:nth-child(10) { top: 88%; left: 40%; }
+  .welcome-decorations span:nth-child(11) { top: 84%; right: 4%; }
+  .welcome-decorations span:nth-child(12) { top: 52%; left: 3%; }
+  .welcome-decorations span:nth-child(13) { top: 55%; right: 3%; }
+  .welcome-decorations span:nth-child(14) { top: 12%; left: 2%; }
+  .welcome-decorations span:nth-child(15) { top: 15%; right: 3%; }
+  .welcome-decorations span:nth-child(16) { top: 32%; left: 2%; }
+  .welcome-decorations span:nth-child(17) { top: 35%; right: 2%; }
+  .welcome-decorations span:nth-child(18) { top: 48%; left: 2%; }
+  .welcome-decorations span:nth-child(19) { top: 50%; right: 2%; }
+  .welcome-decorations span:nth-child(20) { top: 70%; left: 2%; }
+  .welcome-decorations span:nth-child(21) { top: 73%; right: 2%; }
+  .welcome-decorations span:nth-child(22) { top: 94%; left: 18%; }
+  .welcome-decorations span:nth-child(23) { top: 2%; right: 28%; }
+  .welcome-decorations span:nth-child(24) { top: 28%; right: 4%; }
+  .welcome-decorations span:nth-child(25) { top: 78%; left: 3%; }
+  .welcome-decorations span:nth-child(26) { top: 96%; right: 18%; }
+
   .welcome-panel h1 {
     font-size: 2.35rem;
   }
