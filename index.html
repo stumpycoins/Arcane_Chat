@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SecretChat</title>
+    <link rel="icon" type="image/png" href="img/SecretChat_Icon.png">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="welcome-panel" id="welcomePanel" aria-labelledby="welcomeTitle">
+        <img class="brand-mark" src="img/SecretChat_Icon.png" alt="" aria-hidden="true">
+        <h1 id="welcomeTitle">SecretChat</h1>
+        <p>Enter your name, then create a private room or join one with a secret code.</p>
+        <form class="name-form" id="nameForm">
+          <label for="displayName">Your name</label>
+          <div class="name-row">
+            <input id="displayName" name="displayName" type="text" maxlength="24" autocomplete="name" placeholder="Type your name" required>
+            <button type="submit">Continue</button>
+          </div>
+        </form>
+
+        <section class="room-gate hidden" id="roomGate" aria-label="Room options">
+          <div class="choice-tabs" role="tablist" aria-label="Choose room action">
+            <button class="tab active" id="createTab" type="button">Create</button>
+            <button class="tab" id="joinTab" type="button">Join</button>
+          </div>
+
+          <form class="room-form" id="createRoomForm">
+            <label for="roomName">Room name</label>
+            <input id="roomName" name="roomName" type="text" maxlength="32" placeholder="Friends room" required>
+            <button type="submit">Create room</button>
+          </form>
+
+          <form class="room-form hidden" id="joinRoomForm">
+            <label for="roomCode">Secret code</label>
+            <input id="roomCode" name="roomCode" type="text" maxlength="11" placeholder="ABC-123-XY" required>
+            <p class="form-error hidden" id="joinError">No room found with that secret code.</p>
+            <button type="submit">Join room</button>
+          </form>
+        </section>
+      </section>
+
+      <section class="chat-app hidden" id="chatApp" aria-label="SecretChat room">
+        <aside class="sidebar">
+          <div class="room-header">
+            <img class="brand-mark small" src="img/SecretChat_Icon.png" alt="" aria-hidden="true">
+            <div>
+              <h2>SecretChat</h2>
+              <span id="onlineStatus">Private room</span>
+            </div>
+          </div>
+
+          <div class="profile-card">
+            <span class="avatar" id="profileAvatar">U</span>
+            <div>
+              <strong id="profileName">User</strong>
+              <span>Online now</span>
+            </div>
+          </div>
+
+          <div class="room-list" aria-label="Rooms">
+            <button class="room active" type="button">
+              <span class="dot active-dot"></span>
+              <span id="activeRoomName">Secret Room</span>
+            </button>
+          </div>
+        </aside>
+
+        <section class="conversation">
+          <header class="mobile-chat-header">
+            <div class="mobile-title-row">
+              <span class="avatar" id="mobileProfileAvatar">U</span>
+              <div>
+                <h2><button class="room-title-button show-participants" id="mobileConversationTitle" type="button">Secret Room</button></h2>
+              </div>
+            </div>
+            <div class="mobile-code-actions">
+              <button class="code-pill mobile-code" id="mobileCopyCode" type="button" title="Copy secret code">Code: <span id="mobileSecretCodeLabel">---</span></button>
+              <button class="ghost-button mobile-share-code" id="shareRoomCode" type="button">Share</button>
+            </div>
+            <button class="ghost-button leave-room" type="button">Leave room</button>
+          </header>
+
+          <header class="conversation-header">
+            <div>
+              <h2><button class="room-title-button show-participants" id="conversationTitle" type="button">Secret Room</button></h2>
+              <span id="roomMeta">Live private room</span>
+            </div>
+            <div class="header-actions">
+              <button class="code-pill" id="copyCode" type="button" title="Copy secret code">Code: <span id="secretCodeLabel">---</span></button>
+              <button class="ghost-button leave-room" type="button">Leave room</button>
+            </div>
+          </header>
+
+          <div class="participants-popover hidden" id="participantsPopover" role="dialog" aria-label="People in this room">
+            <strong>People in this room</strong>
+            <ul id="participantsList"></ul>
+          </div>
+
+          <div class="messages" id="messages" role="log" aria-live="polite"></div>
+
+          <div class="typing hidden" id="typingIndicator">
+            SecretChat is typing
+            <span></span><span></span><span></span>
+          </div>
+
+          <div class="reply-preview hidden" id="replyPreview">
+            <div>
+              <strong id="replyAuthor">Replying</strong>
+              <span id="replyText">Message</span>
+            </div>
+            <button class="icon-button" id="cancelReply" type="button" title="Cancel reply">x</button>
+          </div>
+
+          <form class="composer" id="messageForm">
+            <label class="attach-button" for="imageInput" title="Share image">+</label>
+            <input class="file-input" id="imageInput" type="file" accept="image/*" aria-label="Share image">
+            <input id="messageInput" type="text" maxlength="280" autocomplete="off" placeholder="Write a message" aria-label="Message">
+            <button type="submit">Send</button>
+          </form>
+
+          <div class="image-preview hidden" id="imagePreview">
+            <img id="imagePreviewThumb" src="" alt="Selected image preview">
+            <div>
+              <strong>Image ready</strong>
+              <span id="imageName">Image selected</span>
+            </div>
+            <button class="image-share-button" id="shareImage" type="button">Share</button>
+            <button class="icon-button" id="removeImage" type="button" title="Remove image">x</button>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
