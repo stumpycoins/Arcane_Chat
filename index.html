@@ -15,13 +15,55 @@
       <section class="welcome-panel" id="welcomePanel" aria-labelledby="welcomeTitle">
         <img class="brand-mark" src="Img/SecretChat_Icon.png" alt="" aria-hidden="true">
         <h1 id="welcomeTitle">Arcane Chat</h1>
-        <p>Enter your name, then create a private room or join one with a secret code.</p>
+        <p class="welcome-quote">“There’s a version of us that only exists after midnight, in messages we delete and feelings we don’t.”</p>
+        <p>Create a private room or Join one with a secret code.</p>
         <form class="name-form" id="nameForm">
           <label for="displayName">Your name</label>
-          <div class="name-row">
-            <input id="displayName" name="displayName" type="text" maxlength="24" autocomplete="name" placeholder="Type your name" required>
-            <button type="submit">Continue</button>
+          <input id="displayName" name="displayName" type="text" maxlength="24" autocomplete="name" placeholder="Type your name" required>
+
+          <label for="gender">Gender</label>
+          <select id="gender" name="gender" required>
+            <option value="" selected disabled>Select gender</option>
+            <option>Woman</option>
+            <option>Man</option>
+            <option>Non-binary</option>
+            <option>Prefer not to say</option>
+          </select>
+
+          <label>Country</label>
+          <div class="country-options">
+            <label><input type="radio" name="countryType" value="india" checked> India</label>
+            <label><input type="radio" name="countryType" value="other"> Other country</label>
           </div>
+
+          <div class="location-field" id="indiaFields">
+            <label for="indiaState">State or union territory</label>
+            <select id="indiaState" name="indiaState" required>
+              <option value="" selected disabled>Select your state</option>
+              <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option>
+              <option>Bihar</option><option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option>
+              <option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option>
+              <option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option>
+              <option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option>
+              <option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option>
+              <option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option>
+              <option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option>
+              <option>Andaman and Nicobar Islands</option><option>Chandigarh</option>
+              <option>Dadra and Nagar Haveli and Daman and Diu</option><option>Delhi</option>
+              <option>Jammu and Kashmir</option><option>Ladakh</option><option>Lakshadweep</option>
+              <option>Puducherry</option>
+            </select>
+          </div>
+
+          <div class="location-field hidden" id="otherCountryFields">
+            <label for="otherCountry">Country</label>
+            <input id="otherCountry" name="otherCountry" type="text" maxlength="56" placeholder="Type your country" disabled>
+          </div>
+
+          <label for="city">City or place</label>
+          <input id="city" name="city" type="text" maxlength="56" autocomplete="address-level2" placeholder="For example, Chennai" required>
+
+          <button type="submit">Continue</button>
         </form>
 
         <section class="room-gate hidden" id="roomGate" aria-label="Room options">

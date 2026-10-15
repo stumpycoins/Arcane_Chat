@@ -4,6 +4,12 @@ const welcomePanel = document.querySelector("#welcomePanel");
 const chatApp = document.querySelector("#chatApp");
 const nameForm = document.querySelector("#nameForm");
 const displayName = document.querySelector("#displayName");
+const genderInput = document.querySelector("#gender");
+const cityInput = document.querySelector("#city");
+const indiaFields = document.querySelector("#indiaFields");
+const indiaStateInput = document.querySelector("#indiaState");
+const otherCountryFields = document.querySelector("#otherCountryFields");
+const otherCountryInput = document.querySelector("#otherCountry");
 const roomGate = document.querySelector("#roomGate");
 const createTab = document.querySelector("#createTab");
 const joinTab = document.querySelector("#joinTab");
@@ -54,24 +60,46 @@ const typingClientId = crypto.randomUUID();
 let typingIdleTimer = null;
 let isTyping = false;
 
-if (state.name && state.roomCode) {
-  restoreSavedRoom();
-} else if (state.name) {
-  showRoomGate();
+displayName.value = state.name || "";
+genderInput.value = state.gender || "";
+cityInput.value = state.city || "";
+if (state.country && state.country !== "India") {
+  document.querySelector('input[name="countryType"][value="other"]').checked = true;
+  otherCountryInput.value = state.country;
+} else {
+  indiaStateInput.value = state.region || "";
 }
+updateCountryFields();
+
+if (state.name && state.gender && state.city && state.country && state.region) {
+  if (state.roomCode) restoreSavedRoom();
+  else showRoomGate();
+}
+
+document.querySelectorAll('input[name="countryType"]').forEach((input) => {
+  input.addEventListener("change", updateCountryFields);
+});
 
 nameForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const name = displayName.value.trim();
+  const selectedCountryType = document.querySelector('input[name="countryType"]:checked').value;
+  const country = selectedCountryType === "india" ? "India" : otherCountryInput.value.trim();
+  const region = selectedCountryType === "india" ? indiaStateInput.value : country;
 
-  if (!name) {
-    displayName.focus();
+  if (!name || !genderInput.value || !country || !cityInput.value.trim() || !region) {
+    nameForm.reportValidity();
     return;
   }
 
   state.name = name;
+  state.gender = genderInput.value;
+  state.country = country;
+  state.region = region;
+  state.city = cityInput.value.trim();
   saveState();
-  showRoomGate();
+  if (state.roomCode) restoreSavedRoom();
+  else showRoomGate();
 });
 
 createTab.addEventListener("click", () => {
@@ -295,6 +323,17 @@ function showRoomGate() {
   roomName.focus();
 }
 
+function updateCountryFields() {
+  const selectedCountryType = document.querySelector('input[name="countryType"]:checked')?.value;
+  const isIndia = selectedCountryType === "india";
+  indiaFields.classList.toggle("hidden", !isIndia);
+  indiaStateInput.disabled = !isIndia;
+  indiaStateInput.required = isIndia;
+  otherCountryFields.classList.toggle("hidden", isIndia);
+  otherCountryInput.disabled = isIndia;
+  otherCountryInput.required = !isIndia;
+}
+
 async function restoreSavedRoom() {
   const result = await requestJson(apiUrl(`/api/rooms/${encodeURIComponent(state.roomCode)}/join`), {
     method: "POST",
@@ -332,6 +371,7 @@ function showRoomMode(mode) {
 function enterChat(room, joinedAt = null) {
   isTyping = false;
   currentRoom = room;
+  setMessageBackgroundArt();
   state.roomCode = room.code;
   saveState();
   visibleAfter = joinedAt ? Date.parse(joinedAt) : null;
@@ -349,6 +389,11 @@ function enterChat(room, joinedAt = null) {
   renderMessages(room.messages);
   connectToRoomEvents(room.code);
   messageInput.focus();
+}
+
+function setMessageBackgroundArt() {
+  const imageNumber = Math.floor(Math.random() * 6) + 1;
+  messages.style.setProperty("--message-art", `url("${appBasePath}/Img/MessageBG${imageNumber}.png")`);
 }
 
 function connectToRoomEvents(code) {
