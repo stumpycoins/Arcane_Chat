@@ -5,9 +5,6 @@ const chatApp = document.querySelector("#chatApp");
 const nameForm = document.querySelector("#nameForm");
 const displayName = document.querySelector("#displayName");
 const genderInput = document.querySelector("#gender");
-const cityInput = document.querySelector("#city");
-const indiaFields = document.querySelector("#indiaFields");
-const indiaStateInput = document.querySelector("#indiaState");
 const otherCountryFields = document.querySelector("#otherCountryFields");
 const otherCountryInput = document.querySelector("#otherCountry");
 const roomGate = document.querySelector("#roomGate");
@@ -62,16 +59,13 @@ let isTyping = false;
 
 displayName.value = state.name || "";
 genderInput.value = state.gender || "";
-cityInput.value = state.city || "";
 if (state.country && state.country !== "India") {
   document.querySelector('input[name="countryType"][value="other"]').checked = true;
   otherCountryInput.value = state.country;
-} else {
-  indiaStateInput.value = state.region || "";
 }
 updateCountryFields();
 
-if (state.name && state.gender && state.city && state.country && state.region) {
+if (state.name && state.gender && state.country) {
   if (state.roomCode) restoreSavedRoom();
   else showRoomGate();
 }
@@ -85,9 +79,8 @@ nameForm.addEventListener("submit", (event) => {
   const name = displayName.value.trim();
   const selectedCountryType = document.querySelector('input[name="countryType"]:checked').value;
   const country = selectedCountryType === "india" ? "India" : otherCountryInput.value.trim();
-  const region = selectedCountryType === "india" ? indiaStateInput.value : country;
 
-  if (!name || !genderInput.value || !country || !cityInput.value.trim() || !region) {
+  if (!name || !genderInput.value || !country) {
     nameForm.reportValidity();
     return;
   }
@@ -95,8 +88,8 @@ nameForm.addEventListener("submit", (event) => {
   state.name = name;
   state.gender = genderInput.value;
   state.country = country;
-  state.region = region;
-  state.city = cityInput.value.trim();
+  delete state.region;
+  delete state.city;
   saveState();
   if (state.roomCode) restoreSavedRoom();
   else showRoomGate();
@@ -326,9 +319,6 @@ function showRoomGate() {
 function updateCountryFields() {
   const selectedCountryType = document.querySelector('input[name="countryType"]:checked')?.value;
   const isIndia = selectedCountryType === "india";
-  indiaFields.classList.toggle("hidden", !isIndia);
-  indiaStateInput.disabled = !isIndia;
-  indiaStateInput.required = isIndia;
   otherCountryFields.classList.toggle("hidden", isIndia);
   otherCountryInput.disabled = isIndia;
   otherCountryInput.required = !isIndia;
@@ -371,7 +361,6 @@ function showRoomMode(mode) {
 function enterChat(room, joinedAt = null) {
   isTyping = false;
   currentRoom = room;
-  setMessageBackgroundArt();
   state.roomCode = room.code;
   saveState();
   visibleAfter = joinedAt ? Date.parse(joinedAt) : null;
@@ -391,9 +380,21 @@ function enterChat(room, joinedAt = null) {
   messageInput.focus();
 }
 
-function setMessageBackgroundArt() {
-  const imageNumber = Math.floor(Math.random() * 6) + 1;
-  messages.style.setProperty("--message-art", `url("${appBasePath}/Img/MessageBG${imageNumber}.png")`);
+function setMessageBackgroundArt(messageCount) {
+  const wallpaper = document.createElement("div");
+  wallpaper.className = "message-wallpaper";
+  wallpaper.setAttribute("aria-hidden", "true");
+
+  const imageCount = Math.max(1, Math.ceil(messageCount / 8));
+  for (let imageNumber = 1; imageNumber <= imageCount; imageNumber += 1) {
+    const image = document.createElement("img");
+    const backgroundNumber = ((imageNumber - 1) % 6) + 1;
+    image.src = `${appBasePath}/Img/MessageBG${backgroundNumber}.png`;
+    image.alt = "";
+    wallpaper.append(image);
+  }
+
+  messages.prepend(wallpaper);
 }
 
 function connectToRoomEvents(code) {
@@ -448,8 +449,8 @@ function setTypingStatus(typing) {
 
 function renderMessages(roomMessages) {
   messages.replaceChildren();
-
   roomMessages = roomMessages.filter((message) => !visibleAfter || Date.parse(message.createdAt) > visibleAfter);
+  setMessageBackgroundArt(roomMessages.length);
 
   roomMessages.forEach((message) => {
     const item = document.createElement("article");
